@@ -18,6 +18,20 @@ All 3d printed components were fabricated by [MiniLab3d](https://minilab3d.pt) v
 	* #define PN 12 // number of pixels in the LED ring
 	* #define LS 1 // runs a lightshow whenever pinged for the controller version; set 0 to turn off
 		* TO DO: test that light show works after moving commands to version check
+		
+2. Wire an Arduino uno to (see below for our specific implementation):
+	* Output to trigger TTL devices on pins 8, 9, 10, 11, 12
+	* Input on pin 2
+	* Output data to Neopixel ring on pin 6
+	
+3. Compile and upload sketch to Arduino.
+
+4. Install Arduino device adapter including Switch and DAC components; the Neopixel ring will give a short light show if it is configured correctly.
+
+5. Configure settings according to the instructions for the [Arduino device adapter](https://micro-manager.org/wiki/Arduino) with these modifications:
+	* A digital output pattern with Pin 13 on will turn on the Neopixel ring (rather than triggering a 6th TTL device)
+	* DAC-Volts can be adjusted from 0 (minimum neopixel LED intensity) to 5 (maximum  intensity)
+	* Note: If the Neopixel ring is not turning on, the line "tempPattern = tempPattern & B00011111;" can be commented out in the Arduino sketch to diagnose if this is a problem with configuration or connecting the Neopixel ring, because the Arduino Uno has an LED indicating Pin 13 digital out.
 
 ## Control box hardware
 
