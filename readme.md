@@ -14,10 +14,10 @@ All 3d printed components were fabricated by [MiniLab3d](https://minilab3d.pt) v
 
 1. Modify parameters in #define statements in the Arduino sketch including:
 	* #define BF 20 // default LED intensity (8-bit 0—255)
-		* TO DO: Make global BF variable that can be changed by receiving command 31vv where vv is 12-bit number from 0 to 4095
+		* TO DO: Test that BF brightness control added works using analog out
 	* #define PN 12 // number of pixels in the LED ring
 	* #define LS 1 // runs a lightshow whenever pinged for the controller version; set 0 to turn off
-		* TO DO: move the light show code to controller version section of sketch and run only after returning the version to serial so that it doesn't interfere with initialization routine
+		* TO DO: test that light show works after moving commands to version check
 
 ## Control box hardware
 
