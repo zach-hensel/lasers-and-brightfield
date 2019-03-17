@@ -1,15 +1,17 @@
 # Description
 
-This describes a small hack of the [Micromanager Arduino Device Adapter](https://valelab4.ucsf.edu/svn/micromanager2/trunk/DeviceAdapters/Arduino/), which can trigger 5 lasers and 1 neopixel LED ring.
+This describes a small hack of the [Micromanager Arduino Device Adapter](https://valelab4.ucsf.edu/svn/micromanager2/trunk/DeviceAdapters/Arduino/), which can trigger 5 lasers (Oxxius LaserBoxx LBX and LBC models) and 1 neopixel LED ring. The motivation for doing this was a low-effort way to add brightfield illumination to a microscope setup that already had 5  lasers triggered using the Arduino device adapter in micromanager without learning how to modify device adapters. With a phase objective, it is possible to achieve [condenser free phase contrast](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4277858/) using an LED ring, as well as other contrast methods.
+
+All 3d printed components were fabricated by [MiniLab3d](https://minilab3d.pt) via 3dhubs and STL files are in 1-mm units.
 
 ## Software
 
-* The Arduino sketch was modified so that commands to trigger the 6th laser instead turn on each pixel in an Adafruit neopixel LED ring. The LED brightness is hardco
+* The Arduino sketch was modified so that commands to trigger the 6th laser instead turn on each pixel in an Adafruit neopixel LED ring. The LED brightness is hardcoded into the Arduino sketch in a #define command; a future update will use the "Set Analogue output" command to instead set the LED intensity since this implementation is not using the analogue output (DAC) device.
 
 ## Control box hardware
 
 * Arduino Uno Rev3 powered by USB (From Elegoo starter kit)
-* Arduino Proto Shield V5 with headers removed (from Elegoo starter kit)
+* Arduino Proto Shield V5 with some headers removed (from Elegoo starter kit; plastic headers removed with pliers and then pins removed by desoldering)
 * 5x female db9 connectors
 	* Arduino outputs 8--12 wired to pin 5 (Laser Enable)
 	* Arduino ground wired to pin 9 (Digital Ground)
@@ -20,11 +22,11 @@ This describes a small hack of the [Micromanager Arduino Device Adapter](https:/
 	* Pin 2 to Arduino digital output 6
 	* Pin 3 to Arduino +5 V
 * 1x female BNC connector (sourced from PT Robotics #PTR002965)
-	* Connected to triggering device (e.g. camera trigger out); +5 input tested to work with +3.3 V outputs from EMCCD (Photometrics Evolve 512) and sCMOS (Photometrics Prime 95b), but may want to [convert to +5 V](https://github.com/PRNicovich/NicoLase/tree/master/Hardware)
+	* Connected to triggering device (e.g. camera trigger out); +5 input tested to work with +3.3 V trigger outputs from EMCCD (Photometrics Evolve 512) and sCMOS (Photometrics Prime 95b), but may want to [convert to +5 V](https://github.com/PRNicovich/NicoLase/tree/master/Hardware).
 	* Shield to Arduino ground
 	* Conductor to Arduino digital input pin 2
 * ABS Enclosure cut with rotary tool to fit back panel (sourced from PT Robotics #PTR000810)
-* Back panel printed 0.1-mm layers in PLA using 3d hubs
+* Back panel printed 0.1-mm layers in PLA.
 	
 ## LED ring hardware
 
@@ -45,4 +47,3 @@ This describes a small hack of the [Micromanager Arduino Device Adapter](https:/
 	* XLR connector Pin 1 to GND
 	* XLR connector Pin 2 to IN
 	* XLR connector Pin 3 to PWR
-
