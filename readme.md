@@ -59,10 +59,12 @@ All 3d printed components were fabricated by [MiniLab3d](https://minilab3d.pt) v
 	* Base (can be attached to optical breadboard with M6 screws)
 		* MK3_Camera_Ball_Mount.stl from user briankb at thingiverse
 		* https://www.thingiverse.com/thing:2828182
+		* Licensed CC-BY
 	* Light ring
 		* picamneopixel holder.stl from user nixternal at thingiverse
 		* https://www.thingiverse.com/thing:2189609
 		* Modified with rotary tool to add a hole for XLR connector, which was superglued in place
+		* Licensed CC-BY-NC-SA
 		
 * Male XLR connector (sourced from PT Robotics #PTR002090) 
 	* Drill hole to accomodate XLR connector within LED ring
