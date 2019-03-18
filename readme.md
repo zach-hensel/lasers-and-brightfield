@@ -15,10 +15,10 @@ All 3d printed components were fabricated by [MiniLab3d](https://minilab3d.pt) v
 ### Installation
 
 1. Modify parameters in #define statements in the Arduino sketch including:
-	* #define BF 20 // default LED intensity (8-bit 0—255)
-	* #define PN 12 // number of pixels in the LED ring
-	* #define LS 1 // runs a lightshow whenever pinged for the controller version; set 0 to turn off
-	* #define PIN 6 // digital out pint to communicate with neopixel ring
+	* `#define BF 20 // default LED intensity (8-bit 0—255)`
+	* `#define PN 12 // number of pixels in the LED ring`
+	* `#define LS 1 // runs a lightshow whenever pinged for the controller version; set 0 to turn off`
+	* `#define PIN 6 // digital out pint to communicate with neopixel ring`
 		
 2. Wire an Arduino uno to (see below for our specific implementation):
 	* Output to trigger TTL devices on pins 8, 9, 10, 11, 12
