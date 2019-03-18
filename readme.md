@@ -2,7 +2,7 @@
 
 This describes a small hack of the [Micromanager Arduino Sketch](https://valelab4.ucsf.edu/svn/micromanager2/trunk/DeviceAdapters/Arduino/), which can trigger 5 lasers (Oxxius LaserBoxx LBX and LBC models) and 1 neopixel LED ring (rather than 6 lasers). The motivation for doing this was a low-effort way to add brightfield illumination to a microscope setup that already had 5  lasers triggered using the Arduino device adapter in micromanager without learning how to modify device adapters.
 
-![Digital outputs](images/digitalOuts.jpeg)
+![Digital outputs](images/digitalOuts.jpeg | width=400)
 
 This was inspired by seeing a similar setup in the [Oxford Nanoimager](https://www.youtube.com/watch?v=QzGPyz0SOf8), which looks to have 6 LEDs in a circle with a circumference similar to the Neopixel 12 ring placed a few cm above the sample. With a phase objective, it is possible to achieve [condenser free phase contrast](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4277858/) using an LED ring, as well as other contrast methods.
 
@@ -54,9 +54,9 @@ All 3d printed components were fabricated by [MiniLab3d](https://minilab3d.pt) v
 * ABS Enclosure cut with rotary tool to fit back panel (sourced from PT Robotics #PTR000810)
 * Back panel printed 0.1-mm layers in PLA.
 
-![Internal connections](images/internal.jpeg)
+![Internal connections](images/internal.jpeg | width=400)
 
-![External connections](images/external.JPG)
+![External connections](images/external.png | width=250)
 	
 ## LED ring hardware
 
