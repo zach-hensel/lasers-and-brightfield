@@ -109,7 +109,7 @@
 #include <Adafruit_NeoPixel.h>
 #define PIN 6 // neopixel drive pin
 #define NP 12 // number of neopixels to use
-#define BF 20 // initial brightfield level for neopixels (0-255)
+#define BF 32 // initial brightfield level for neopixels (0-255)
 #define LS 1 // whether or not lightshow should play when Arduino initialized (when it is pinged for its version)
 
 unsigned int LEDintensity_ = BF;
@@ -205,10 +205,10 @@ void setup() {
            int channel = Serial.read();
            if (waitForSerial(timeOut_)) {
               byte msb = Serial.read();
-              msb &= B00001111;
               if (waitForSerial(timeOut_)) {
                 byte lsb = Serial.read();
                 analogueOut(channel, msb, lsb);
+                //LEDintensity_ = 255;
                 Serial.write( byte(3));
                 Serial.write( channel);
                 Serial.write(msb);
@@ -360,17 +360,17 @@ void setup() {
          if (LS) {
          	   // Light show after everything started up OK
 			   for(int i=0;i<NP;i++){
-				  strip.setPixelColor(i, 255, 0, 0);
+				  strip.setPixelColor(i, BF, 0, 0);
 				  delay(25);
 				  strip.show();
 				}
 				for(int i=0;i<NP;i++){
-				  strip.setPixelColor(i, 0, 255, 0);
+				  strip.setPixelColor(i, 0, BF, 0);
 				  delay(25);
 				  strip.show();
 				}
 				for(int i=0;i<NP;i++){
-				  strip.setPixelColor(i, 0, 0, 255);
+				  strip.setPixelColor(i, 0, 0, BF);
 				  delay(25);
 				  strip.show();
 				}
@@ -495,29 +495,15 @@ bool waitForSerial(unsigned long timeOut)
     return false;
  }
 
-// Sets analogue output in the TLV5618
-// channel is either 0 ('A') or 1 ('B')
-// value should be between 0 and 4095 (12 bit max)
-// pins should be connected as described above
-
 // ZH 190317 -- hijacked this to instead change brightfield LED intensity
 
 void analogueOut(int channel, byte msb, byte lsb) 
 {
-  msb = msb << 8;
-  LEDintensity_ = 255*(msb | lsb)/4095;
+  
+  float intensity = (lsb & 0xFF) | ((msb & 0x0F) << 8);
+  LEDintensity_ = 255*intensity/4095;
+
+  NPon_ = false;
   PORTB = modPORTB(currentPattern_); // write out new intensity so you can see it live if light is on
   
-  // all this code now unused -- 
-  //digitalWrite(latchPin, LOW);
-  //msb &= B00001111;
-  //if (channel == 0)
-  //   msb |= B10000000;
-  // Note that in all other cases, the data will be written to DAC B and BUFFER
-  // shiftOut(dataPin, clockPin, MSBFIRST, msb);
-  // shiftOut(dataPin, clockPin, MSBFIRST, lsb);
-  // The TLV5618 needs one more toggle of the clockPin:
-  // digitalWrite(clockPin, HIGH);
-  // digitalWrite(clockPin, LOW);
-  // digitalWrite(latchPin, HIGH);
 }
