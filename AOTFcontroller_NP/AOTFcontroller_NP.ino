@@ -139,7 +139,7 @@ volatile long triggerNr_; // total # of triggers in this run (0-based)
 volatile long sequenceNr_; // # of trigger in sequence (0-based)
 int skipTriggers_ = 0;  // # of triggers to skip before starting to generate patterns
 byte currentPattern_ = 0;
-const unsigned long timeOut_ = 5000; // ZH made timeout longer for testing with serial monitor
+const unsigned long timeOut_ = 1000; // ZH made timeout longer for testing with serial monitor
 bool blanking_ = false;
 bool blankOnHigh_ = false;
 bool triggerMode_ = false;
@@ -503,7 +503,10 @@ void analogueOut(int channel, byte msb, byte lsb)
   float intensity = (lsb & 0xFF) | ((msb & 0x0F) << 8);
   LEDintensity_ = 255*intensity/4095;
 
-  NPon_ = false;
-  PORTB = modPORTB(currentPattern_); // write out new intensity so you can see it live if light is on
+  // If Neopixel on, update new intensity
+  if (NPon_) {
+    NPon_ = false;
+    PORTB = modPORTB(currentPattern_); 
+  }
   
 }

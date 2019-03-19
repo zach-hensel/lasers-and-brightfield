@@ -51,6 +51,7 @@ All 3d printed components were fabricated by [MiniLab3d](https://minilab3d.pt) v
 	* Connected to triggering device (e.g. camera trigger out); +5 input tested to work with +3.3 V trigger outputs from EMCCD (Photometrics Evolve 512) and sCMOS (Photometrics Prime 95b), but may want to [convert to +5 V](https://github.com/PRNicovich/NicoLase/tree/master/Hardware).
 	* Shield to Arduino ground
 	* Conductor to Arduino digital input pin 2
+	* In our implementation a push-button can also trigger Pin 2 from the +5 Arduino and a 10 kOhm pull-down resistor is also added
 * ABS Enclosure cut with rotary tool to fit back panel (sourced from PT Robotics #PTR000810)
 * Back panel printed 0.1-mm layers in PLA.
 
