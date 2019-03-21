@@ -1,6 +1,10 @@
 # Description
 
+<img src="images/sequentialTriggering.mov.gif" width="284">
+
 This describes a small hack of the [Micromanager Arduino Sketch](https://valelab4.ucsf.edu/svn/micromanager2/trunk/DeviceAdapters/Arduino/), which can trigger 5 lasers (Oxxius LaserBoxx LBX and LBC models) and 1 neopixel LED ring (rather than 6 lasers). The motivation for doing this was a low-effort way to add brightfield illumination to a microscope setup that already had 5  lasers triggered using the Arduino device adapter in micromanager without learning how to modify device adapters.
+
+This has been tested with micromanager 2.0beta and 2.0gamma with the default arduino device adapter.
 
 <img src="images/digitalOuts.jpeg" width="400">
 
@@ -36,6 +40,10 @@ All 3d printed components were fabricated by [MiniLab3d](https://minilab3d.pt) v
 
 ## Control box hardware
 
+<img src="images/internal.jpeg" width="400">
+<img src="images/external.png" width="250">
+<img src="images/assembledControlBox.jpeg" width="250">
+
 * Arduino Uno Rev3 powered by USB (From Elegoo starter kit)
 * Arduino Proto Shield V5 with some headers removed (from Elegoo starter kit; plastic headers removed with pliers and then pins removed by desoldering)
 * 5x female db9 connectors
@@ -54,11 +62,10 @@ All 3d printed components were fabricated by [MiniLab3d](https://minilab3d.pt) v
 	* In our implementation a push-button can also trigger Pin 2 from the +5 Arduino and a 10 kOhm pull-down resistor is also added
 * ABS Enclosure cut with rotary tool to fit back panel (sourced from PT Robotics #PTR000810)
 * Back panel printed 0.1-mm layers in PLA.
-
-<img src="images/internal.jpeg" width="400">
-<img src="images/external.png" width="250">
 	
 ## LED ring hardware
+
+<img src="images/ledHolder.jpeg" width="250">
 
 * 3d printed neopixel ring holder. Both were printed 0.1-mm layer PLA; in retrospect the LED holder would've been better to print ABS because it warps after fitting to the ball mount. STL files sourced from:
 	* Base (can be attached to optical breadboard with M6 screws)
