@@ -16,6 +16,8 @@ All 3d printed components were fabricated by [MiniLab3d](https://minilab3d.pt) v
 
 * The Arduino sketch was modified so that commands to trigger the 6th laser instead turn on each pixel in an Adafruit neopixel LED ring. The LED brightness is hardcoded into the Arduino sketch in a #define command; a future update will use the "Set Analogue output" command to instead set the LED intensity since this implementation is not using the analogue output (DAC) device.
 
+* "AOTFcontroller_NP_color.ino" adds the ability to change the color of the Neopixel LEDs and uses some more compact code for assigning LED colors. This is the version that is still under development. DAC channel 2 is used to change LED color (right now, by setting Max Volts to 5 and setting output voltage to 0, 1, 2 or 3 for white, red, green or blue). Up to 4095 colors could be added easily; 24-bit color is technically possible but would be confusing to accomplish with the current Arduino device adapter.
+
 ### Installation
 
 1. Modify parameters in #define statements in the Arduino sketch including:
