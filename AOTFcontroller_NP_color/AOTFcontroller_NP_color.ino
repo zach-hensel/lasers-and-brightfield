@@ -1,3 +1,31 @@
+/* 
+
+Zach Hensel
+23 March 2019
+
+This is a modification of the Arduino sketch provided with the Micro-mangager Arduino device adapter; 
+it outputs 5 TTL signals to pins 8, 9, 10, 11, and 12, but not to pin 13. Instead, commands from
+the micro-manager device adapter that would trigger pin 13 turn on a Neopixel LED strip/ring. Also,
+the brightness and color of the Neopixel LEDs can be modified by installing the Arduino DAC peripherals.
+
+Installing in micromanager:
+
+1. Install Arduino device adapter with peripherals Shutter, Switch, DAC1, DAC2
+2. DAC1 = LED brightness setting; the "max volts" setting can be anything.
+3. DAC2 = LED color; the "max volts" setting MUST stay at the default of 5 for this code to work, and 
+    color settings 0, 1, 2, 3 are defined below (White, Red, Green, Blue); the code could be modified
+    to have up to 4095 different colors.
+
+Usage: Identical to what's described for the Arduino device adapter: https://micro-manager.org/wiki/Arduino
+    with the exception of the two DAC channels
+
+We use this to trigger 5 oxxius lasers (fluorescence) and a Neopixel 12 ring (brightfield; maybe could
+    be used for fluorescence.
+
+See our lab's implementation of this here - https://github.com/zach-hensel/lasers-and-brightfield
+
+*/
+
 /*
  * This goal of the application is to set the digital output on pins 8-12 
  * This can be accomplished in three ways.  First, a serial command can directly set
@@ -22,7 +50,7 @@
  *   Where x is the output channel (either 1 or 2), and vv is the output in a 
  *   12-bit significant number.
  *   Controller will return 3xvv:
- *   ZH190317 -- hijacked this command to instead change LED intensity!
+ *   ZH190317 -- hijacked this command to instead change LED intensity (channel 1) and color (channel 2)
  *
  * Get Analogue output:  4
  *
@@ -84,7 +112,6 @@
  *   Sets whether to blank on trigger high or trigger low.  x=0: blank on trigger high,
  *   x=1: blank on trigger low.  x=0 is the default
  *   Controller returns 22
- *
  * 
  * Get Identification: 30
  *   Returns (asci!) MM-Ard\r\n
@@ -112,9 +139,18 @@
 #define BF 32 // initial brightfield level for neopixels (0-255)
 #define LS 1 // whether or not lightshow should play when Arduino initialized (when it is pinged for its version)
 
-unsigned int LEDintensity_ = BF;
+// Initialize Neopixel ring
 
-Adafruit_NeoPixel strip = Adafruit_NeoPixel(NP, PIN, NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel strip = Adafruit_NeoPixel(NP, PIN, NEO_GRB + NEO_KHZ800); // have to change this line for different types of LEDs
+
+unsigned int LEDintensity_ = BF; // set initial LED intensity
+uint32_t LEDcolor_ = strip.Color(LEDintensity_,LEDintensity_,LEDintensity_);
+
+uint32_t black_ = strip.Color(0,0,0); // define black for turning off LEDs
+
+bool NPon_ = false; // variable to track if neopixel array is on or off
+
+// Unmodified code from mm arduino sketch starting here; only modified to call "modPORTB" rather than setting PORTB directly
  
 unsigned int version_ = 2;
 
@@ -144,8 +180,6 @@ bool blanking_ = false;
 bool blankOnHigh_ = false;
 bool triggerMode_ = false;
 boolean triggerState_ = false;
-
-bool NPon_ = false; // variable to track if neopixel array is on or off
  
 void setup() {
    // Higher speeds do not appear to be reliable
@@ -358,29 +392,29 @@ void setup() {
          Serial.println(version_);
          
          if (LS) {
-         	   // Light show after everything started up OK
-			   for(int i=0;i<NP;i++){
-				  strip.setPixelColor(i, BF, 0, 0);
-				  delay(25);
-				  strip.show();
-				}
-				for(int i=0;i<NP;i++){
-				  strip.setPixelColor(i, 0, BF, 0);
-				  delay(25);
-				  strip.show();
-				}
-				for(int i=0;i<NP;i++){
-				  strip.setPixelColor(i, 0, 0, BF);
-				  delay(25);
-				  strip.show();
-				}
-				for(int i=0;i<NP;i++){
-				  strip.setPixelColor(i, 0, 0, 0);
-				  delay(25);
-				  strip.show();
-				}
+              // Light show after everything started up OK
+         for(int i=0;i<NP;i++){
+          strip.setPixelColor(i, BF, 0, 0);
+          delay(25);
+          strip.show();
+        }
+        for(int i=0;i<NP;i++){
+          strip.setPixelColor(i, 0, BF, 0);
+          delay(25);
+          strip.show();
+        }
+        for(int i=0;i<NP;i++){
+          strip.setPixelColor(i, 0, 0, BF);
+          delay(25);
+          strip.show();
+        }
+        for(int i=0;i<NP;i++){
+          strip.setPixelColor(i, 0, 0, 0);
+          delay(25);
+          strip.show();
+        }
          }
-			 
+       
          break;
 
        case 40:
@@ -460,31 +494,6 @@ void setup() {
       }
     }
 }
-
-// Writes to PORTB and to neopixel LEDs depending on pin 13 state
-byte modPORTB(byte tempPattern) {
-  // Check for bit 5 for LED command
-  if ((tempPattern >> 5) & 0x1) {
-    tempPattern = tempPattern & B00011111;
-    // Turn on bf LEDs if off
-    if (! NPon_) {
-      for(int i=0;i<NP;i++){
-        strip.setPixelColor(i, LEDintensity_, LEDintensity_, LEDintensity_);
-      }
-      strip.show();
-      NPon_ = true;
-    }
-  }
-  else if (NPon_) {
-    // Turn off bf LEDs
-    for(int i=0;i<NP;i++){
-      strip.setPixelColor(i, 0, 0, 0);
-    }
-    strip.show();
-    NPon_ = false;
-  }
-  return tempPattern;
-}
  
 bool waitForSerial(unsigned long timeOut)
 {
@@ -495,13 +504,60 @@ bool waitForSerial(unsigned long timeOut)
     return false;
  }
 
-// ZH 190317 -- hijacked this to instead change brightfield LED intensity
+// New functions added by ZH below this point
+
+// Writes to PORTB and to neopixel LEDs dending on pin 13 state
+byte modPORTB(byte tempPattern) {
+  
+  // Check for bit 5 for LED command
+  if ((tempPattern >> 5) & 0x1) {
+    // tempPattern = tempPattern & B00011111; // this is not necessary I think; removing it will make pin 13-linked LED light up at same time as neopixels which is useful for diagnosing problems
+    // Turn on bf LEDs if off
+    if (! NPon_) {
+      strip.fill(LEDcolor_);
+      strip.show();
+      NPon_ = true;
+    }
+  }
+  else if (NPon_) {
+    // Turn off bf LEDs
+    strip.fill(black_);
+    strip.show();
+    NPon_ = false;
+  }
+  return tempPattern;
+}
 
 void analogueOut(int channel, byte msb, byte lsb) 
 {
+
+  if (channel == 0) {
+    float channelData = (lsb & 0xFF) | ((msb & 0x0F) << 8);
+    LEDintensity_ = 255*channelData/4095;
+    LEDcolor_ = strip.Color(LEDintensity_,LEDintensity_,LEDintensity_); // set to white; could change to maintain color but it's annoying to code
+  }
+  else {
+    float channelData = (lsb & 0xFF) | ((msb & 0x0F) << 8);
+    int color = 5*channelData/4095; // can change 5 to something else for more colors but this will work for now
   
-  float intensity = (lsb & 0xFF) | ((msb & 0x0F) << 8);
-  LEDintensity_ = 255*intensity/4095;
+    switch (color) {
+       
+       // Set LED color options
+       case 0 : // White
+          LEDcolor_ = strip.Color(LEDintensity_,LEDintensity_,LEDintensity_);
+          break;
+       case 1 : // Red
+          LEDcolor_ = strip.Color(LEDintensity_,0,0);
+          break;
+        case 2 : // Green
+          LEDcolor_ = strip.Color(0,LEDintensity_,0);
+          break;
+        case 3 : // Blue
+          LEDcolor_ = strip.Color(0,0,LEDintensity_);
+          break;
+    }
+    
+  }
 
   // If Neopixel on, update new intensity
   if (NPon_) {
